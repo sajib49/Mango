@@ -1,7 +1,8 @@
+
 using AutoMapper;
-using Mango.Services.CouponAPI;
-using Mango.Services.CouponAPI.Data;
-using Mango.Services.CouponAPI.Extentions;
+using Mango.Services.ProductAPI;
+using Mango.Services.ProductAPI.Data;
+using Mango.Services.ProductAPI.Extentions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -27,9 +28,9 @@ builder.Services.AddSwaggerGen(option =>
     {
         Name = "Authorization",
         Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
-        In= ParameterLocation.Header,
+        In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
-        Scheme ="Bearer"
+        Scheme = "Bearer"
     });
     option.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -72,7 +73,7 @@ void ApplyMigration()
     using (var scope = app.Services.CreateScope())
     {
         var _db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        if(_db.Database.GetPendingMigrations().Count() > 0)
+        if (_db.Database.GetPendingMigrations().Count() > 0)
         {
             _db.Database.Migrate();
         }
