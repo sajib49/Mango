@@ -25,6 +25,12 @@
             </div>
             <div class="col-10 pb-3">
                 <textarea class="form-control" asp-for="Description" rows="5"></textarea>
+            </div>            
+            <div class="col-2">
+                <label class="control-label pt-2" style="font-size:20px;">Price</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input class="form-control" asp-for="Price" />
             </div>
             <div class="col-2">
                 <label class="control-label pt-2" style="font-size:20px;">ImageUrl</label>
@@ -32,14 +38,7 @@
             <div class="col-10 pb-3">
                 <input class="form-control" asp-for="ImageUrl" />
             </div>
-            <div class="col-2">
-                <label class="control-label pt-2" style="font-size:20px;">Price</label>
-            </div>
-            <div class="col-10 pb-3">
-                <input class="form-control" asp-for="Price" />
-            </div>
             <div class="col-5 offset-2">
-
                 <a class="btn-primary btn form-control" asp-action="ProductIndex">Back to List</a>
             </div>
             <div class="col-5">
