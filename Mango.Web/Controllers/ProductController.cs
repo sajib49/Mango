@@ -53,6 +53,10 @@ namespace Mango.Web.Controllers
                     TempData["error"] = response?.Message;
                 }
             }
+            else
+            {
+				TempData["error"] = "Bad request.";
+			}
             return View(model);
         }
 

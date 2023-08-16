@@ -96,7 +96,7 @@ namespace Mango.Web.Controllers
         {
             await HttpContext.SignOutAsync();
             _tokenProvider.ClearToken();
-            return RedirectToAction("CouponIndex", "Coupon");
+            return RedirectToAction("Index", "Home");
         }
 
         private async Task SigninUser(LoginResponseDto model)
