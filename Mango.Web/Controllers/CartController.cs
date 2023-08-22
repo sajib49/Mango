@@ -21,6 +21,46 @@ namespace Mango.Web.Controllers
             return View(await LoadCartDtoBasedOnLoggedInUser());
         }
 
+        public async Task<IActionResult> Remove(int cartDetailId)
+        {
+            //var userId = User.Claims
+            //                    .Where(x => x.Type == JwtRegisteredClaimNames.Sub)?
+            //                    .FirstOrDefault()?.Value;
+            var response = await _cartService.RemoveFromCartAsync(cartDetailId);
+            if (response is not null && response.IsSuccess)
+            {
+                TempData["success"] = "Cart updated successfully";
+                return RedirectToAction(nameof(CartIndex));
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApplyCoupon(CartDto cartDto)
+        {
+ 
+            var response = await _cartService.ApplyCouponAsync(cartDto);
+            if (response is not null && response.IsSuccess)
+            {
+                TempData["success"] = "Cart updated successfully";
+                return RedirectToAction(nameof(CartIndex));
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveCoupon(CartDto cartDto)
+        {
+            cartDto.CartHeader.CouponCode = string.Empty;
+            var response = await _cartService.ApplyCouponAsync(cartDto);
+            if (response is not null && response.IsSuccess)
+            {
+                TempData["success"] = "Cart updated successfully";
+                return RedirectToAction(nameof(CartIndex));
+            }
+            return View();
+        }
+
         private async Task<CartDto> LoadCartDtoBasedOnLoggedInUser()
         {
             var userId = User.Claims
@@ -32,6 +72,7 @@ namespace Mango.Web.Controllers
                 var cartDto = JsonConvert.DeserializeObject<CartDto>(Convert.ToString(response.Result));
                 return cartDto;
             }
+
             return new CartDto();
         }
     }

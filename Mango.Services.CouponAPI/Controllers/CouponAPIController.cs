@@ -4,12 +4,13 @@ using Mango.Services.CouponAPI.Models;
 using Mango.Services.CouponAPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
     [Route("api/Coupon")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class CouponAPIController : ControllerBase
     {
         private readonly AppDbContext _db;
@@ -44,7 +45,7 @@ namespace Mango.Services.CouponAPI.Controllers
         {
             try
             {
-                Coupon coupon = _db.Coupons.First(x => x.CouponId == id);
+                Coupon coupon = _db.Coupons.First(x => x.CouponId == id);                
                 _response.Result = _mapper.Map<CouponDto>(coupon);
             }
             catch (Exception ex)
