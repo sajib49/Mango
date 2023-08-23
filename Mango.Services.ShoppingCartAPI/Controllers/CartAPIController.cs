@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mango.MessageBus;
 using Mango.Services.ShoppingCartAPI.Data;
 using Mango.Services.ShoppingCartAPI.Models;
 using Mango.Services.ShoppingCartAPI.Models.Dto;
@@ -17,16 +18,22 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         private readonly AppDbContext _db;
         private readonly IProductService _productService;
         private readonly ICouponService _couponService;
+        private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
 
         public CartAPIController(AppDbContext db, IMapper mapper,
             IProductService productService,
-            ICouponService couponService)
+            ICouponService couponService,
+            IMessageBus messageBus,
+            IConfiguration configuration)
         {
             _response = new ResponseDto();
             _db = db;
             _mapper = mapper;
             _productService = productService;
             _couponService = couponService;
+             _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -174,6 +181,22 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 cartFromDb.CouponCode = string.Empty;
                 _db.CartHeaders.Update(cartFromDb);
                 await _db.SaveChangesAsync();
+                _response.Result = true;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+        [HttpPost("EmailCartRequest")]
+        public async Task<object> EmailCartRequest([FromBody] CartDto cartDto)
+        {
+            try
+            {
+                await _messageBus.PublishMessage(cartDto, _configuration.GetValue<string>("TopicAndQueueName:EmailShoppingCartQueue"));
                 _response.Result = true;
             }
             catch (Exception ex)

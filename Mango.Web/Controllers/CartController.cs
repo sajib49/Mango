@@ -10,6 +10,7 @@ namespace Mango.Web.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
+
         public CartController(ICartService cartService) 
         {
             _cartService = cartService;
@@ -60,6 +61,25 @@ namespace Mango.Web.Controllers
             }
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> EmailCart(CartDto cartDto)
+        {
+            CartDto cart = await LoadCartDtoBasedOnLoggedInUser();
+
+            cart.CartHeader.Email = User.Claims
+                                .Where(x => x.Type == JwtRegisteredClaimNames.Email)?
+                                .FirstOrDefault()?.Value;
+
+            var response = await _cartService.EmailCart(cart);
+            if (response is not null && response.IsSuccess)
+            {
+                TempData["success"] = "Email will be processed and sent shortly";
+                return RedirectToAction(nameof(CartIndex));
+            }
+            return View();
+        }
+
 
         private async Task<CartDto> LoadCartDtoBasedOnLoggedInUser()
         {
