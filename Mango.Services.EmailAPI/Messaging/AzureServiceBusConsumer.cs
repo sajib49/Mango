@@ -3,7 +3,6 @@ using Mango.Services.EmailAPI.Models.Dto;
 using Mango.Services.EmailAPI.Services;
 using Newtonsoft.Json;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace Mango.Services.EmailAPI.Messaging
 {
