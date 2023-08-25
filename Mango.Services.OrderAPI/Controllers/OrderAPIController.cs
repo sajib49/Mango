@@ -56,7 +56,7 @@ namespace Mango.Services.OrderAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpPost("CreateStripeSession")]
         public async Task<ResponseDto> CreateStripeSession([FromBody] StripeRequestDto stripeRequestDto)
         {
             try
@@ -66,7 +66,7 @@ namespace Mango.Services.OrderAPI.Controllers
                 {
                     SuccessUrl = stripeRequestDto.ApprovedUrl,
                     CancelUrl = stripeRequestDto.CancelUrl,
-                    
+                    LineItems = new List<SessionLineItemOptions>(),   
                     Mode = "payment",
                 };
 
@@ -76,7 +76,7 @@ namespace Mango.Services.OrderAPI.Controllers
                     {
                         PriceData = new SessionLineItemPriceDataOptions()
                         {
-                            UnitAmount = (long)(item.Price * 100) ,// $20.99 - 2099
+                            UnitAmount = (long)(item.Product.Price * 100) ,// $20.99 - 2099
                             Currency = "usd",
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
