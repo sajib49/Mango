@@ -12,7 +12,7 @@
         public string? Phone { get; set; }
 
         public string? Email { get; set; }
-        public required DateTime OrderTime { get; set; }
+        public DateTime OrderTime { get; set; }
         public string? Status { get; set; }
         public string? PaymentIntentId { get; set; }
         public string? StripeSessionId { get; set; }
