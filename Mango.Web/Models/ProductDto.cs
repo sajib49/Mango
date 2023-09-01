@@ -1,4 +1,6 @@
-﻿namespace Mango.Web.Models
+﻿using Mango.Web.Utility;
+
+namespace Mango.Web.Models
 {
     public class ProductDto
     {
@@ -10,6 +12,9 @@
         public string? ImageUrl { get; set; }
         public string? ImageLocalPath { get; set; }
         public int Count { get; set; } = 1;
+
+        [MaxFileSize(1)]
+        [AllowExtensions(new string[] {".jpg",".png"})]
         public IFormFile? Image { get; set; }
     }
 }
