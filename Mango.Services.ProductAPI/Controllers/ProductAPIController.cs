@@ -98,15 +98,40 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "admin")]
-        public ResponseDto Put([FromBody] ProductDto productDto)
+        public ResponseDto Put(ProductDto productDto)
         {
             try
             {
-                var obj = _mapper.Map<Product>(productDto);
-                _db.Products.Update(obj);
+                var product = _mapper.Map<Product>(productDto);
+
+                if (productDto.Image is not null)
+                {
+                    if (!string.IsNullOrEmpty(product.ImageLocalPath))
+                    {
+                        var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
+                        FileInfo file = new FileInfo(oldFilePathDirectory);
+                        if (file.Exists)
+                        {
+                            file.Delete();
+                        }
+                    }
+
+                    string fileName = product.ProductId + Path.GetExtension(productDto.Image.FileName);
+                    string filePath = @"wwwroot\ProductImages\" + fileName;
+                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                    using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        productDto.Image.CopyTo(fileStream);
+                    }
+                    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+                    product.ImageUrl = baseUrl + "/ProductImages/" + fileName;
+                    product.ImageLocalPath = filePath;
+                }
+
+                _db.Products.Update(product);
                 _db.SaveChanges();
 
-                _response.Result = _mapper.Map<ProductDto>(obj);
+                _response.Result = _mapper.Map<ProductDto>(product);
             }
             catch (Exception ex)
             {
@@ -123,18 +148,18 @@ namespace Mango.Services.ProductAPI.Controllers
         {
             try
             {
-                var obj = _db.Products.First(x => x.ProductId == id);
+                var product = _db.Products.First(x => x.ProductId == id);
 
-                if(!string.IsNullOrEmpty(obj.ImageLocalPath))
+                if(!string.IsNullOrEmpty(product.ImageLocalPath))
                 {
-                    var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), obj.ImageLocalPath);
+                    var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
                     FileInfo file = new FileInfo(oldFilePathDirectory);
                     if (file.Exists)
                     {
                         file.Delete();
                     }
                 }
-                _db.Products.Remove(obj);
+                _db.Products.Remove(product);
                 _db.SaveChanges();
             }
             catch (Exception ex)
