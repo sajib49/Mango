@@ -56,7 +56,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API");
-    c.RoutePrefix = string.Empty;
+    //c.RoutePrefix = string.Empty;
 });
 
 app.UseHttpsRedirection();
