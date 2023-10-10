@@ -2,7 +2,6 @@
 using Mango.Services.RewardAPI.Message;
 using Mango.Services.RewardAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
 
 namespace Mango.Services.RewardAPI.Services
 {
@@ -15,7 +14,7 @@ namespace Mango.Services.RewardAPI.Services
             this._dbOptions = dbOptions;
         }
 
-        public async Task UpdateRewards(RewardsMessage rewardsMessage)
+        public async Task UpdateRewards(RewardsService rewardsMessage)
         {
             try
             {

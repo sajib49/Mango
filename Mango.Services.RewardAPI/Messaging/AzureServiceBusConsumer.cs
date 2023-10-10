@@ -49,7 +49,7 @@ namespace Mango.Services.RewardAPI.Messaging
             var message = args.Message;
             var body = Encoding.UTF8.GetString(message.Body);
 
-            var objMessage = JsonConvert.DeserializeObject<RewardsMessage>(body);
+            var objMessage = JsonConvert.DeserializeObject<RewardsService>(body);
             try
             {
                 //TODO - try to log email
